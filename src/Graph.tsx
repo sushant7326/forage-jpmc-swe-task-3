@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Table } from '@finos/perspective';
+import { Table, TableData } from '@finos/perspective';
 import { ServerRespond } from './DataStreamer';
 import { DataManipulator } from './DataManipulator';
 import './Graph.css';
-import { time } from 'console';
 
 interface IProps {
   data: ServerRespond[],
@@ -12,6 +11,7 @@ interface IProps {
 interface PerspectiveViewerElement extends HTMLElement {
   load: (table: Table) => void,
 }
+
 class Graph extends Component<IProps, {}> {
   table: Table | undefined;
 
@@ -30,7 +30,7 @@ class Graph extends Component<IProps, {}> {
       timestamp: 'date',
       upper_bound: 'float',
       lower_bound: 'float',
-      trigger_alert: 'float',
+      trigger_alert: 'float'
     };
 
     if (window.perspective && window.perspective.worker()) {
@@ -49,16 +49,16 @@ class Graph extends Component<IProps, {}> {
         timestamp: 'distinct count',
         upper_bound: 'avg',
         lower_bound: 'avg',
-        trigger_alert: 'avg',
+        trigger_alert: 'avg'
       }));
     }
   }
 
   componentDidUpdate() {
     if (this.table) {
-      this.table.update(
+      this.table.update([
         DataManipulator.generateRow(this.props.data),
-      );
+      ] as unknown as TableData);
     }
   }
 }
